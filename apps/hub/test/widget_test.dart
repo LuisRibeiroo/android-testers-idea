@@ -28,7 +28,6 @@ void main() {
     await tester.pumpWidget(TesterLoopHubApp(controller: controller));
     await tester.pumpAndSettle();
 
-    // Open BoletoScan OCR campaign detail
     await tester.tap(find.text('BoletoScan OCR'));
     await tester.pumpAndSettle();
 
@@ -36,7 +35,6 @@ void main() {
     await tester.tap(find.byKey(const Key('join_campaign_btn')));
     await tester.pumpAndSettle();
 
-    // Advance stepper to step 4 and validate SDK handshake
     await tester.tap(find.text('Abrir Google Group e avançar'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Tornar-se testador na Play Store'));
@@ -48,19 +46,58 @@ void main() {
 
     expect(find.text('Handshake SDK confirmado · Inscrição ativa ✓'), findsOneWidget);
 
-    // Go to My Tests and validate 60s daily session
     await tester.tap(find.text('Ir para Meus Testes'));
     await tester.pumpAndSettle();
 
     final enr = controller.enrollments.first;
     await tester.tap(find.byKey(Key('launch_session_${enr.id}')));
     await tester.pumpAndSettle();
-    expect(enr.id, isNotEmpty);
-    expect(controller.pendingPoints, 5); // 4 seed + 1 newly validated day
+    expect(controller.pendingPoints, 5);
 
-    // Check Wallet displays 360-day expiration notice
     await tester.tap(find.text('Carteira'));
     await tester.pumpAndSettle();
     expect(find.textContaining('360 dias'), findsOneWidget);
+  });
+
+  testWidgets('Developer validates SDK in 2 steps, publishes campaign and opens report',
+      (tester) async {
+    final controller = HubController(
+      nativeChannel: const HubNativeChannel(simulated: true),
+    );
+    await controller.signInWithGoogle();
+    await tester.pumpWidget(TesterLoopHubApp(controller: controller));
+    await tester.pumpAndSettle();
+
+    // Navigate to My Apps
+    await tester.tap(find.text('Meus Apps'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('HabitoLoop'));
+    await tester.pumpAndSettle();
+
+    final ownedApp = controller.myApps.first;
+    await tester.tap(find.byKey(Key('validate_debug_${ownedApp.id}')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(Key('validate_play_${ownedApp.id}')));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(Key('publish_campaign_${ownedApp.id}')));
+    await tester.pumpAndSettle();
+
+    expect(controller.availablePoints, 15); // 135 - 120 campaign cost
+    expect(controller.campaignForApp(ownedApp.id), isNotNull);
+
+    await tester.tap(find.byKey(Key('report_btn_${ownedApp.id}')));
+    await tester.pumpAndSettle();
+    expect(find.text('Relatório para Acesso à Produção'), findsOneWidget);
+    await tester.tap(find.text('Fechar'));
+    await tester.pumpAndSettle();
+
+    // Check Settings and Reddit community link
+    await tester.tap(find.byIcon(Icons.arrow_back));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ajustes'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('r/AndroidAppTesters'), findsOneWidget);
   });
 }

@@ -5,6 +5,8 @@ import 'core/theme/app_tokens.dart';
 import 'features/auth/onboarding_screen.dart';
 import 'features/discover/discover_screen.dart';
 import 'features/enrollment/my_tests_screen.dart';
+import 'features/my_apps/my_apps_screen.dart';
+import 'features/settings/settings_screen.dart';
 import 'features/wallet/wallet_screen.dart';
 
 void main() {
@@ -45,8 +47,8 @@ class HubHomeShell extends StatelessWidget {
       DiscoverScreen(controller: controller),
       MyTestsScreen(controller: controller),
       WalletScreen(controller: controller),
-      const Center(child: Text('Meus Apps')),
-      const Center(child: Text('Ajustes')),
+      MyAppsScreen(controller: controller),
+      SettingsScreen(controller: controller),
     ];
 
     final isWide = MediaQuery.sizeOf(context).width >= 720;
