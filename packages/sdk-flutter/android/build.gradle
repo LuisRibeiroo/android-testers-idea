@@ -1,0 +1,38 @@
+group "io.testerloop.flutter"
+version "1.0.0"
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:8.5.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20"
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    namespace "io.testerloop.flutter"
+    compileSdk 35
+
+    defaultConfig {
+        minSdk 23
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+dependencies {
+    implementation "io.testerloop:sdk:1.0.0"
+}
