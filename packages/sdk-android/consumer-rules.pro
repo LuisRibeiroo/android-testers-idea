@@ -1,0 +1,4 @@
+-keep class io.testerloop.sdk.TesterLoop { *; }
+-keep enum io.testerloop.sdk.TesterLoopStatus { *; }
+-keep class io.testerloop.sdk.internal.TesterLoopInitializer { *; }
+-keep class io.testerloop.sdk.internal.EntryActivity { *; }
