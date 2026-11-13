@@ -1,7 +1,7 @@
 # SPEC técnica — TesterLoop (nome provisório)
 
-> **Status:** Rascunho v0.1 · **Data:** 2026-11-12
-> Complementa o [`PRD.md`](./PRD.md). Pontos de produto em aberto: **OQ-n** (PRD §12). Pontos técnicos em aberto: **TQ-n** (§15).
+> **Status:** Rascunho v0.2 · **Data:** 2026-11-13
+> Complementa o [`PRD.md`](./PRD.md). Pontos de produto em aberto: **OQ-9** e **OQ-18** (PRD §12). Pontos técnicos em aberto: **TQ-n** (§15).
 
 ---
 
@@ -16,7 +16,7 @@ flowchart LR
     TAPP -- "ContentProvider query<br/>(token ligado ao callingPackage)" --> HUB
   end
 
-  subgraph Backend["Supabase"]
+  subgraph Backend["Supabase (VPS)"]
     AUTH["Auth (Google)"]
     DB[("Postgres<br/>RLS + pg_cron")]
     EF["Edge Functions (TS)<br/>sdk-*, hub-*, billing-*"]
@@ -40,7 +40,7 @@ flowchart LR
 | App Hub | Flutter (Android no MVP, Flutter Web para o console na fase 2) | `apps/hub` |
 | SDK Android | Kotlin, AAR no Maven Central | `packages/sdk-android` |
 | Plugin Flutter | Plugin Flutter (só Android, no-op em outras plataformas) no pub.dev | `packages/sdk-flutter` |
-| Backend | Supabase (Postgres 15+, Edge Functions Deno/TS, Storage, Auth, pg_cron) | `backend/supabase` |
+| Backend | Supabase self-hosted em VPS (Postgres 15+, Edge Functions Deno/TS, Storage, Auth, pg_cron) | `backend/supabase` |
 | Push | Firebase Cloud Messaging | — |
 | Landing + Docs | Astro (SSG) + Starlight em `/docs` | `apps/landing` |
 
@@ -83,13 +83,14 @@ testerloop/
 
 ## 3. Backend
 
-### 3.1 Por que Supabase (OQ-17)
+### 3.1 Por que Supabase self-hosted em VPS (OQ-17)
 - **Ledger de pontos** e transações atômicas (publicar campanha = debitar pontos + mudar status) ficam naturais em SQL.
 - Rankings ("mais testadores", "recentes") são queries simples com índice. No Firestore, exigiriam contadores desnormalizados.
 - Constraints de exclusão (`EXCLUDE USING gist`) impedem dois Featured no mesmo slot e horário.
 - RLS permite que o Hub leia direto do banco com segurança. A lógica sensível fica em Edge Functions e RPCs `security definer`.
 - `supabase_flutter` é maduro.
-- **Alternativa:** Firebase (Firestore + Functions). É viável, mas o ledger e os rankings ficam mais trabalhosos.
+- **Hospedagem em VPS (self-hosted):** stack oficial via Docker Compose (Postgres, GoTrue/Auth, PostgREST, Realtime, Storage, Deno Edge Runtime, Kong e `pg_cron`) atrás de proxy reverso com TLS, garantindo custo fixo e previsível (sem cobrança por MAU ou egress da nuvem gerenciada), com backups automatizados do volume Postgres.
+- **Alternativa descartada:** Firebase (Firestore + Functions), onde ledger e rankings ficam mais trabalhosos.
 
 ### 3.2 Modelo de dados (DDL resumido)
 
@@ -303,7 +304,7 @@ create table abuse_reports (id uuid primary key default gen_random_uuid(),
 | `complete_enrollments` | a cada hora | Marca `completed` se cumprir a regra; lança `release` (pendente → disponível) + `bonus_completion`. Atualiza contadores da campanha. |
 | `complete_campaigns` | a cada hora | `completed_count ≥ slots` → `completed`; push para o dono. `deadline_at` vencido → `failed`. |
 | `daily_reminders` | a cada hora | Usuários cujo horário local é 19:00 e que têm inscrições sem atividade hoje → push. |
-| `expire_points` | diário | Expira pontos após 180 dias de inatividade (OQ-7). |
+| `expire_points` | diário | Expira pontos após 360 dias de inatividade (OQ-7). |
 | `featured_rotation` | a cada 5 min | Confirma/encerra reservas e invalida o cache do feed. |
 
 ### 3.6 Máquinas de estado
@@ -350,7 +351,7 @@ order by published_at desc limit 20;
 select c.* from featured_bookings b join feed_campaigns c on c.id = b.campaign_id
 where b.status = 'confirmed' and now() <@ b.period order by b.slot_index;
 ```
-> **❓ OQ-3 (variação):** se "máx. 12" se referir ao tamanho da lista e não às vagas, basta trocar o `limit`. O modelo suporta as duas leituras.
+> **Nota (OQ-3):** definido como **vagas por campanha** (12 + 3 de reserva); o feed mantém paginação de 20 itens por aba.
 
 ---
 
@@ -735,7 +736,7 @@ Regras: só campanhas `recruiting`/`in_progress`. Máximo de 1 booking ativo por
 - "Última atualização" visível + `dateModified`, com revisão sempre que a política do Google mudar.
 - Citação de fontes oficiais (Play Console Help) para ganhar credibilidade.
 - `llms.txt` / `llms-full.txt`. Página de autor/organização (E-E-A-T).
-- Política de crawlers de IA no `robots.txt` (❓ OQ: liberar GPTBot, ClaudeBot, PerplexityBot e Google-Extended? Recomendação: **liberar**, já que o objetivo é ser citado).
+- Política de crawlers de IA no `robots.txt`: liberar `GPTBot`, `ClaudeBot`, `PerplexityBot` e `Google-Extended`, já que o objetivo é ser citado.
 
 ---
 
@@ -763,7 +764,7 @@ Outros itens: exclusão de conta no app e em `/delete-account`, retenção de `s
 | SDK Android | Testes unitários (Robolectric), teste instrumentado com app de amostra + servidor mock, verificação de tamanho do AAR no CI (falha se > 50 KB). |
 | Plugin Flutter | `example/` com integration test no emulador. |
 | Backend | Testes SQL (pgTAP) para ledger, jobs e RLS. Testes Deno para Edge Functions. |
-| CD | GitHub Actions: Hub → Play (internal → closed → prod) via Fastlane. SDK → Maven Central (`vanniktech/gradle-maven-publish-plugin`). Plugin → pub.dev (publicação automatizada via OIDC). Landing → deploy em cada push na `main`. Migrations → `supabase db push`. |
+| CD | GitHub Actions: Hub → Play (internal → closed → prod) via Fastlane. SDK → Maven Central (`vanniktech/gradle-maven-publish-plugin`). Plugin → pub.dev (publicação automatizada via OIDC). Landing → deploy em cada push na `main`. Migrations & Edge Functions → deploy contínuo para a instância Supabase na VPS (`supabase db push` / SSH). |
 | Observabilidade | Sentry (Hub + Edge Functions), logs estruturados, dashboards: handshakes/dia, taxa de erro do SDK, inscrições ativas, tempo até preencher vagas. |
 
 ---

@@ -1,8 +1,8 @@
 # PRD — TesterLoop (nome provisório)
 
-> **Status:** Rascunho v0.1 · **Data:** 2026-11-12 · **Autor:** Luís Ribeiro
+> **Status:** Rascunho v0.2 · **Data:** 2026-11-13 · **Autor:** Luís Ribeiro
 > Documento de produto. Detalhes técnicos estão em [`SPEC.md`](./SPEC.md).
-> Itens marcados com **❓ OQ-n** são pontos em aberto e estão consolidados na seção 12.
+> Decisões e pontos ainda em aberto (**❓ OQ-9** e **❓ OQ-18**) estão consolidados na seção 12.
 
 ---
 
@@ -10,7 +10,7 @@
 
 Contas de desenvolvedor **pessoais** do Google Play criadas após 13/11/2023 só conseguem pedir acesso à produção depois de rodar um **teste fechado com pelo menos 12 testadores que estejam inscritos (opt-in) de forma contínua nos últimos 14 dias**. O número de testadores caiu de 20 para 12 no fim de 2024. O prazo continua sendo de 14 dias.
 
-> ⚠️ **❓ OQ-1 — 7 dias ou 14 dias?** O pedido original fala em "7 dias", mas a regra atual do Google é **14 dias contínuos**. Este PRD usa **14 dias por padrão** e deixa a duração **configurável no servidor**, para acompanhar mudanças de política sem lançar uma nova versão do app.
+> **Decisão (OQ-1):** Embora o rascunho inicial mencionasse 7 dias, a regra atual do Google é **14 dias contínuos**. O sistema usa **14 dias por padrão** e mantém a duração **configurável no servidor**, para acompanhar mudanças de política sem lançar uma nova versão do app.
 
 Na prática, devs independentes enfrentam:
 
@@ -48,7 +48,7 @@ Um **marketplace de troca de testes com verificação real**: o dev ganha **pont
 | **Dev Indie (principal)** | Conta pessoal nova, primeiro app, sem rede de contatos para testes. | Fechar 12×14 rápido e sem dor de cabeça. |
 | **Dev recorrente** | Já publicou e lança apps novos com frequência (cada app novo de conta pessoal nova passa pelo processo). | Previsibilidade e destaque (Featured). |
 | **Testador "farmer"** | Dev que acumula pontos para usar depois ou para trocar com amigos. | Muitos apps disponíveis e lembretes. |
-| **Agência/Estúdio** | Publica apps de clientes em contas pessoais. | Gerenciar vários apps. Possível plano pago (❓ OQ-14). |
+| **Agência/Estúdio** | Publica apps de clientes em contas pessoais. | Gerenciar vários apps. Possível plano pago a avaliar na fase 3 (OQ-14). |
 
 ## 5. Escopo funcional
 
@@ -71,7 +71,7 @@ O app principal é usado tanto por testadores quanto por devs.
 | H12 | Reputação do testador (taxa de conclusão), usada para priorizar e evitar abuso. | P1 |
 | H13 | Exclusão de conta dentro do app e pela web (exigência do Play e da LGPD). | P0 |
 
-> **❓ OQ-2 — Console web para devs?** Cadastrar o app e ver relatórios fica mais confortável no desktop. Sugestão: o mesmo código Flutter compilado para **Flutter Web** (`console.<domínio>`) a partir da fase 2. No MVP, tudo fica no app Android.
+> **Decisão (OQ-2 — Console web para devs):** no MVP, tudo fica no app Android. A partir da fase 2, o mesmo código Flutter será compilado para **Flutter Web** (`console.<domínio>`) para oferecer mais conforto no cadastro e na visualização de relatórios no desktop.
 
 ### 5.2 SDK de rastreamento
 | # | Requisito | Prioridade |
@@ -92,15 +92,15 @@ O app principal é usado tanto por testadores quanto por devs.
 | L2 | Páginas de conteúdo voltadas para busca: "Como conseguir 12 testadores", "Requisito de 14 dias do Google Play explicado", "Teste fechado passo a passo". | P0 |
 | L3 | Docs do SDK (Kotlin e Flutter) com `llms.txt` e `llms-full.txt`. | P0 |
 | L4 | FAQ com `FAQPage` JSON-LD, mais `SoftwareApplication` e `Organization`. | P0 |
-| L5 | i18n **pt-BR + en** (o mercado em inglês é muito maior). ❓ OQ-12 | P0 |
-| L6 | Diretório público de apps em teste (páginas indexáveis por app, opt-in do dev). ❓ OQ-13 | P2 |
+| L5 | i18n **pt-BR + en** no lançamento (o mercado em inglês é muito maior). (OQ-12) | P0 |
+| L6 | Diretório público de apps em teste (páginas indexáveis por app na fase 3, com opt-in do dev). (OQ-13) | P2 |
 | L7 | Lighthouse ≥ 95 em todas as categorias e Core Web Vitals no verde. | P0 |
 
 ### 5.4 Featured (monetização)
 - **3 slots** fixos no topo do Hub (e, opcionalmente, na landing).
 - Duração em blocos de tempo (ex.: 24h, 72h, 7 dias).
 - Só campanhas **ativas e com SDK validado** podem ser destacadas.
-- Modelo de preço: **❓ OQ-8 (fixo × leilão)**. A recomendação está na seção 8.
+- Modelo de preço: **preço fixo + agenda no MVP**, evoluindo para leilão na fase 3 (OQ-8). Valores exatos ainda em definição (**❓ OQ-9**). Ver detalhes na seção 8.
 
 ## 6. Jornadas principais
 
@@ -115,7 +115,7 @@ O app principal é usado tanto por testadores quanto por devs.
 ### 6.2 Dev cadastra o app
 1. **Meus apps → Novo app:** nome, package name, ícone, descrição, link de opt-in do teste fechado.
 2. Recebe um `appKey` e as instruções (ou um prompt pronto para colar na IA) para instalar o SDK.
-3. Sobe o build com SDK no **track de teste fechado** e adiciona o grupo de testers da plataforma (❓ OQ-4).
+3. Sobe o build com SDK no **track de teste fechado** e adiciona o Google Group da plataforma como lista de testadores (OQ-4).
 4. **Teste de launch:** no Hub, toca em **"Validar SDK"** → instala o próprio app pelo Play → abre pelo Hub → o backend confirma package, assinatura e origem Play → **SDK verificado ✓**.
 5. **Publicar campanha** (consome X pontos) → o app entra em "Recentes".
 6. Acompanha o painel: testadores `x/12`, dias contínuos de cada um, previsão de conclusão e feedbacks.
@@ -137,9 +137,10 @@ O app principal é usado tanto por testadores quanto por devs.
 
 Na prática, quem testa **~7 apps em paralelo por 14 dias** (7 × 17 = 119 pontos) consegue publicar um app. Como o custo (120) fica abaixo de 168, a plataforma "subsidia" ~29% do esforço, e isso é compensado por usuários que só testam ou que testam mais do que publicam. Os valores devem ser ajustados com dados reais (tempo médio de preenchimento das vagas).
 
-> **❓ OQ-5** Pontos pendentes por dia ou só na conclusão? (Recomendado: acumular diariamente como *pendente* e liberar na conclusão, o que protege o dev contra abandono.)
-> **❓ OQ-6** Pontos podem ser **comprados**? (Recomendação: **não** no MVP. Vender pontos quebra a reciprocidade e transforma o produto em "venda de testadores", o que aumenta o risco de política do Google. Monetizar só com Featured.)
-> **❓ OQ-7** Pontos expiram? (Sugestão: expiram após 180 dias sem atividade.)
+> **Regras definidas:**
+> - **OQ-5:** Pontos acumulam diariamente como *pendentes* e são liberados apenas na conclusão (protege o dev contra abandono).
+> - **OQ-6:** Pontos **não** podem ser comprados no MVP (preserva a reciprocidade e evita risco de política de "venda de testadores"; monetização apenas via Featured).
+> - **OQ-7:** Pontos expiram após **360 dias** sem atividade.
 
 ## 8. Featured: recomendação
 
@@ -152,7 +153,11 @@ Na prática, quem testa **~7 apps em paralelo por 14 dias** (7 × 17 = 119 ponto
 
 **Recomendação:** **MVP com preço fixo + fila/agenda** (o usuário reserva o próximo bloco livre de 24h/72h/7d). Na **fase 3**, migrar para um **leilão de segundo preço selado por dia**, usando **créditos pagos** (moeda separada dos pontos), quando houver demanda maior que a oferta (ocupação > 80% por 4 semanas).
 
-> **❓ OQ-8** Fixo ou leilão no lançamento? **❓ OQ-9** Preços iniciais (sugestão: US$ 4,99/24h · US$ 11,99/72h · US$ 24,99/7d, com preço regional no Play). **❓ OQ-10** Campanha Featured ainda paga pontos para publicar? (Sugestão: sim. Featured só dá visibilidade.) **❓ OQ-11** Vender Featured também pela web (Stripe)? Isso exige atenção às regras de cobrança do Play.
+> **Decisões e ponto em aberto:**
+> - **OQ-8:** Preço fixo no MVP e leilão na fase 3.
+> - **❓ OQ-9:** Preços iniciais do Featured **em aberto** (referência inicial de estudo: US$ 4,99/24h · US$ 11,99/72h · US$ 24,99/7d, com preço regional no Play).
+> - **OQ-10:** Campanha Featured ainda paga pontos para publicar (Featured só dá visibilidade).
+> - **OQ-11:** No MVP, venda apenas via Google Play Billing; cobrança pela web (Stripe) fica para avaliação futura devido às regras de pagamento do Play.
 
 ## 9. Métricas de sucesso
 
@@ -171,7 +176,7 @@ Na prática, quem testa **~7 apps em paralelo por 14 dias** (7 × 17 = 119 ponto
 | Risco | Impacto | Mitigação |
 |---|---|---|
 | **Política do Google Play:** o Google pode ver a troca de testes como manipulação, ou ver o Hub como app de "instalações incentivadas". | Alto: remoção do Hub ou rejeição de produção para os devs | Posicionar o produto como **teste real com feedback**; exigir uso diário real; não vender pontos; incentivar feedback; consultar a política antes do lançamento; ter **plano B de distribuição** (APK pela landing). |
-| **O próprio Hub precisa de 12 testadores.** | Médio | Publicar com **conta de organização** (CNPJ/D-U-N-S), que é isenta do requisito. ❓ OQ-15 |
+| **O próprio Hub precisa de 12 testadores.** | Médio | Publicar em **conta pessoal** e recrutar os testadores iniciais do próprio Hub via comunidade [r/AndroidAppTesters](https://www.reddit.com/r/AndroidAppTesters) no Reddit (servindo também como dogfooding e canal inicial de tração). (OQ-15) |
 | **Fraude:** emuladores, várias contas no mesmo aparelho, scripts que abrem apps. | Alto | Play Integrity no Hub, 1 conta por dispositivo, sessão mínima em foreground, heurísticas e reputação. |
 | **Cold start:** sem testadores, ninguém completa campanhas. | Alto | Lista de espera, bônus para os primeiros usuários, seeding em comunidades de devs, campanhas "founder" com 0 pontos. |
 | O testador sai do grupo/opt-in sem desinstalar (não detectável pelo SDK). | Médio | Exigir uso diário, que funciona como proxy. Avisar o dev sobre a discrepância com o Play Console. |
@@ -187,26 +192,26 @@ Na prática, quem testa **~7 apps em paralelo por 14 dias** (7 × 17 = 119 ponto
 | **2 — Lançamento público** | 3–4 semanas | Feedback (H9), relatório (H10), Featured com preço fixo (H11), reputação, landing completa com SEO/AEO e docs, console Flutter Web. |
 | **3 — Escala** | contínuo | Leilão de Featured, diretório público, planos para agências, analytics para devs. |
 
-## 12. Pontos em aberto (consolidado)
+## 12. Decisões e pontos em aberto (consolidado)
 
-| ID | Pergunta | Recomendação |
-|---|---|---|
-| **OQ-1** | Duração: 7 ou 14 dias? | **14** (regra atual do Google), configurável. |
-| **OQ-2** | Console web para devs no MVP? | Fase 2, em Flutter Web. |
-| **OQ-3** | "Máx. 12 ao mesmo tempo" é o limite de **testadores por campanha** ou o **tamanho da lista** "mais usuários"? | Entendido como **vagas por campanha**. Sugestão: **12 + 3 de reserva** (15), porque qualquer abandono atrasa a conclusão em 14 dias. |
-| **OQ-4** | Como o testador entra na lista do Play: **Google Group global da plataforma** ou **e-mails individuais** enviados ao dev? | **Google Group(s) da plataforma**: o dev adiciona o grupo uma vez, e o testador entra no grupo com a conta do Play. Evita trocar e-mails (LGPD). |
-| **OQ-5** | Pontos diários ou só na conclusão? | Diários como *pendentes*, liberados na conclusão. |
-| **OQ-6** | Venda de pontos? | Não no MVP. |
-| **OQ-7** | Pontos expiram? | 180 dias sem atividade. |
-| **OQ-8** | Featured: fixo ou leilão? | Fixo no MVP, leilão na fase 3. |
-| **OQ-9** | Preço do Featured? | Ver seção 8. |
-| **OQ-10** | Featured isenta o custo em pontos? | Não. |
-| **OQ-11** | Vender Featured pela web? | Avaliar depois, com cuidado com a política de pagamentos do Play. |
-| **OQ-12** | Idiomas no lançamento? | pt-BR + en. |
-| **OQ-13** | Diretório público de apps na landing (SEO programático)? | Sim, na fase 3, com opt-in do dev. |
-| **OQ-14** | Plano pago para agências (vários apps, sem gastar pontos)? | Avaliar depois de validar a economia. |
-| **OQ-15** | O Hub vai ser publicado em conta pessoal ou de organização? | Organização. |
-| **OQ-16** | O que conta como "dia testado": só ter o app instalado, ou abrir e usar ≥ N segundos? | **Abrir ≥ 60s em foreground** no dia (fuso do testador). |
-| **OQ-17** | Backend: Supabase × Firebase × próprio? | **Supabase** (Postgres para ledger/rankings, ver SPEC §3). |
-| **OQ-18** | Nome definitivo e domínio do produto? | — |
-| **OQ-19** | O app do testador precisa de um uso mínimo ou de uma "tarefa" (ex.: completar onboarding) definida pelo dev? | Fase 3, como "missões" opcionais com bônus. |
+| ID | Questão | Status | Decisão / Estado atual |
+|---|---|---|---|
+| **OQ-1** | Duração: 7 ou 14 dias? | ✅ Decidido | **14 dias contínuos** por padrão (regra atual do Google), configurável no servidor. |
+| **OQ-2** | Console web para devs no MVP? | ✅ Decidido | Não no MVP; na **Fase 2**, em **Flutter Web**. |
+| **OQ-3** | "Máx. 12 ao mesmo tempo" é o limite de **testadores por campanha** ou o **tamanho da lista** "mais usuários"? | ✅ Decidido | **Vagas por campanha**: **12 + 3 de reserva** (15), para evitar atrasos por abandono. |
+| **OQ-4** | Como o testador entra na lista do Play: **Google Group global da plataforma** ou **e-mails individuais** enviados ao dev? | ✅ Decidido | **Google Group(s) da plataforma**: o dev adiciona o grupo uma vez e o testador entra com a conta do Play (evita troca de e-mails / LGPD). |
+| **OQ-5** | Pontos diários ou só na conclusão? | ✅ Decidido | Diários como *pendentes*, liberados na conclusão. |
+| **OQ-6** | Venda de pontos? | ✅ Decidido | **Não** no MVP (monetização apenas via Featured). |
+| **OQ-7** | Pontos expiram? | ✅ Decidido | **360 dias** sem atividade. |
+| **OQ-8** | Featured: fixo ou leilão? | ✅ Decidido | **Fixo** no MVP, **leilão** na fase 3. |
+| **OQ-9** | Preço do Featured? | ❓ Em aberto | Mantido em aberto (referência de estudo na seção 8). |
+| **OQ-10** | Featured isenta o custo em pontos? | ✅ Decidido | **Não** (continua cobrando pontos para publicar). |
+| **OQ-11** | Vender Featured pela web? | ✅ Decidido | Não no MVP; avaliar depois por conta das regras de pagamento do Play. |
+| **OQ-12** | Idiomas no lançamento? | ✅ Decidido | **pt-BR + en**. |
+| **OQ-13** | Diretório público de apps na landing (SEO programático)? | ✅ Decidido | Sim, na **fase 3**, com opt-in do dev. |
+| **OQ-14** | Plano pago para agências (vários apps, sem gastar pontos)? | ✅ Decidido | Avaliar depois de validar a economia. |
+| **OQ-15** | O Hub vai ser publicado em conta pessoal ou de organização? | ✅ Decidido | **Conta pessoal**, usando o [r/AndroidAppTesters](https://www.reddit.com/r/AndroidAppTesters) no Reddit para conseguir auxílio nos testes iniciais do Hub. |
+| **OQ-16** | O que conta como "dia testado": só ter o app instalado, ou abrir e usar ≥ N segundos? | ✅ Decidido | **Abrir ≥ 60s em foreground** no dia (fuso do testador). |
+| **OQ-17** | Backend: Supabase × Firebase × próprio? | ✅ Decidido | **Supabase self-hosted em VPS** (Postgres para ledger/rankings, ver SPEC §3). |
+| **OQ-18** | Nome definitivo e domínio do produto? | ❓ Em aberto | A definir. |
+| **OQ-19** | O app do testador precisa de um uso mínimo ou de uma "tarefa" (ex.: completar onboarding) definida pelo dev? | ✅ Decidido | **Fase 3**, como "missões" opcionais com bônus. |

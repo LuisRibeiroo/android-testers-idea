@@ -1,0 +1,42 @@
+# OS & IDE
+.DS_Store
+*.iml
+.idea/
+.vscode/
+
+# Env & Secrets
+.env
+.env.*
+!.env.example
+
+# Dart / Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+coverage/
+
+# Android / Gradle
+.gradle/
+**/.gradle/
+local.properties
+**/local.properties
+*.jks
+*.keystore
+
+# Node / Astro
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.astro/
+**/.astro/
+
+# Supabase local
+backend/supabase/.branches/
+backend/supabase/.temp/
