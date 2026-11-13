@@ -1,6 +1,6 @@
 # PRD: TesterLoop MVP (Plataforma de Troca de Testes Google Play)
 
-> **Status:** Em execução · **Versão:** 1.0 · **Data:** 2026-11-13  
+> **Status:** Concluído · **Versão:** 1.0 · **Data:** 2026-11-13  
 > **Referências:** [`PRD.md`](../PRD.md) · [`SPEC.md`](../SPEC.md) · [`SDK_AI_INSTALL.md`](../SDK_AI_INSTALL.md)
 
 ---
@@ -35,9 +35,9 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a developer, I want a Melos monorepo and formal OpenAPI/JSON schemas so that SDK, Hub, and backend share unambiguous contracts.
 
 **Acceptance Criteria:**
-- [ ] `melos.yaml` na raiz orquestrando `packages/sdk-flutter` e `apps/hub`
-- [ ] `packages/shared-contracts/openapi-v1.yaml` cobrindo `/sdk/v1/*`, `/hub/v1/*` e `/billing/v1/*`
-- [ ] `packages/shared-contracts/schemas/tracking-token.schema.json` validando JWT ES256 (`iss`, `aud`, `sub`, `pkg`, `kind`, `tz`, `iat`, `exp`)
+- [x] `melos.yaml` na raiz orquestrando `packages/sdk-flutter` e `apps/hub`
+- [x] `packages/shared-contracts/openapi-v1.yaml` cobrindo `/sdk/v1/*`, `/hub/v1/*` e `/billing/v1/*`
+- [x] `packages/shared-contracts/schemas/tracking-token.schema.json` validando JWT ES256 (`iss`, `aud`, `sub`, `pkg`, `kind`, `tz`, `iat`, `exp`)
 
 ---
 
@@ -45,11 +45,11 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a system architect, I want the complete Postgres schema, RLS policies, atomic RPCs, and `pg_cron` jobs configured for self-hosted VPS deployment so that points ledger and campaigns remain consistent and low-cost.
 
 **Acceptance Criteria:**
-- [ ] `backend/supabase/config.toml`, `docker-compose.vps.yml` e `README.md` com instruções de VPS, TLS e backup `pg_dump`
-- [ ] Migration inicial criando todas as tabelas na ordem correta de FK (`profiles`, `devices`, `apps`, `campaigns`, `enrollments`, `daily_activity`, `sdk_events` particionada, `points_ledger`, view `wallet`, `feedback`, `featured_products`, `purchases`, `featured_bookings` com `EXCLUDE USING gist`, `config`, `abuse_reports`) e triggers de contadores
-- [ ] Migration de RLS + RPCs `security definer` (`publish_campaign`, `cancel_campaign` com reembolso proporcional, `enroll_in_campaign`, `submit_feedback`, `delete_user_account`)
-- [ ] Migration de jobs `pg_cron` incluindo `rollup_days`, `complete_enrollments`, `complete_campaigns`, `expire_points` (**360 dias** sem atividade — OQ-7) e `featured_rotation`
-- [ ] `backend/supabase/seed.sql` populando `config`, produtos Featured e link comunitário `r/AndroidAppTesters`
+- [x] `backend/supabase/config.toml`, `docker-compose.vps.yml` e `README.md` com instruções de VPS, TLS e backup `pg_dump`
+- [x] Migration inicial criando todas as tabelas na ordem correta de FK (`profiles`, `devices`, `apps`, `campaigns`, `enrollments`, `daily_activity`, `sdk_events` particionada, `points_ledger`, view `wallet`, `feedback`, `featured_products`, `purchases`, `featured_bookings` com `EXCLUDE USING gist`, `config`, `abuse_reports`) e triggers de contadores
+- [x] Migration de RLS + RPCs `security definer` (`publish_campaign`, `cancel_campaign` com reembolso proporcional, `enroll_in_campaign`, `submit_feedback`, `delete_user_account`)
+- [x] Migration de jobs `pg_cron` incluindo `rollup_days`, `complete_enrollments`, `complete_campaigns`, `expire_points` (**360 dias** sem atividade — OQ-7) e `featured_rotation`
+- [x] `backend/supabase/seed.sql` populando `config`, produtos Featured e link comunitário `r/AndroidAppTesters`
 
 ---
 
@@ -57,10 +57,10 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a mobile client and SDK, I want Deno/TypeScript Edge Functions to issue ES256 tracking tokens, verify handshakes/events, record daily presence, and validate Play Billing purchases.
 
 **Acceptance Criteria:**
-- [ ] Helpers em `_shared/` (`cors.ts`, `jwt.ts` ES256 com Web Crypto, `supabase.ts`)
-- [ ] Endpoints SDK: `sdk-handshake`, `sdk-events` (idempotência por `event.id`), `sdk-config` (kill-switch)
-- [ ] Endpoints Hub: `hub-device-register`, `hub-tracking-token`, `hub-presence`
-- [ ] Endpoints Billing: `billing-verify` (`GET` quote + `POST` verify) e `billing-rtdn`
+- [x] Helpers em `_shared/` (`cors.ts`, `jwt.ts` ES256 com Web Crypto, `supabase.ts`)
+- [x] Endpoints SDK: `sdk-handshake`, `sdk-events` (idempotência por `event.id`), `sdk-config` (kill-switch)
+- [x] Endpoints Hub: `hub-device-register`, `hub-tracking-token`, `hub-presence`
+- [x] Endpoints Billing: `billing-verify` (`GET` quote + `POST` verify) e `billing-rtdn`
 
 ---
 
@@ -68,10 +68,10 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a host Android developer, I want a zero-code Kotlin SDK (< 50 KB, no heavy dependencies) so that integrating TesterLoop requires only 1 Gradle dependency and 1 `<meta-data>` tag.
 
 **Acceptance Criteria:**
-- [ ] `AndroidManifest.xml` com `INTERNET`, `<queries>` para `io.testerloop.hub.token`, `EntryActivity` (`io.testerloop.action.OPEN`) e `InitializationProvider`
-- [ ] `TesterLoopInitializer`, `EntryActivity`, `TokenStore`, `HubTokenClient`, `AppInfo`, `EventQueue` (FIFO JSONL máx 500), `ApiClient` (`HttpURLConnection` + `runCatching`), `SessionTracker` (`ProcessLifecycleOwner`)
-- [ ] API opcional `TesterLoop.init`, `TesterLoop.status`, `TesterLoop.setEnabled`
-- [ ] Testes unitários Kotlin para fila `EventQueue` e serialização de eventos
+- [x] `AndroidManifest.xml` com `INTERNET`, `<queries>` para `io.testerloop.hub.token`, `EntryActivity` (`io.testerloop.action.OPEN`) e `InitializationProvider`
+- [x] `TesterLoopInitializer`, `EntryActivity`, `TokenStore`, `HubTokenClient`, `AppInfo`, `EventQueue` (FIFO JSONL máx 500), `ApiClient` (`HttpURLConnection` + `runCatching`), `SessionTracker` (`ProcessLifecycleOwner`)
+- [x] API opcional `TesterLoop.init`, `TesterLoop.status`, `TesterLoop.setEnabled`
+- [x] Testes unitários Kotlin para fila `EventQueue` e serialização de eventos
 
 ---
 
@@ -79,10 +79,10 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a Flutter developer, I want `flutter pub add testerloop` to automatically merge the Android SDK and remain a safe no-op on iOS, Web, and Desktop.
 
 **Acceptance Criteria:**
-- [ ] `packages/sdk-flutter/pubspec.yaml` declarando apenas plataforma Android
-- [ ] `lib/testerloop.dart` com `TesterLoop.status()` e `TesterLoop.setEnabled(bool)` seguros em não-Android
-- [ ] `android/build.gradle` e `TesterLoopPlugin.kt` integrando `MethodChannel('io.testerloop/sdk')`
-- [ ] Testes unitários Flutter validados com `flutter analyze` e `flutter test`
+- [x] `packages/sdk-flutter/pubspec.yaml` declarando apenas plataforma Android
+- [x] `lib/testerloop.dart` com `TesterLoop.status()` e `TesterLoop.setEnabled(bool)` seguros em não-Android
+- [x] `android/build.gradle` e `TesterLoopPlugin.kt` integrando `MethodChannel('io.testerloop/sdk')`
+- [x] Testes unitários Flutter validados com `flutter analyze` e `flutter test`
 
 ---
 
@@ -90,11 +90,11 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a user, I want an Android Hub app (and responsive Flutter Web console) with dark-first UI, secure native token provider, and Google Sign-In onboarding.
 
 **Acceptance Criteria:**
-- [ ] Projeto `apps/hub` com módulo nativo Kotlin (`TokenProvider` verificando `callingPackage`, `TrackedAppsScanner` usando `queryIntentActivities`, `HubNativePlugin`)
-- [ ] Design System dark-first (`app_tokens.dart`, `app_theme.dart`) com contraste WCAG AA, tipografia tabular (`tabularFigures`) e suporte i18n `pt-BR` / `en`
-- [ ] Modelos imutáveis e `HubController` conectado a repositório híbrido (Supabase + modo local/demo testável)
-- [ ] Tela `/onboarding` com 3 slides explicativos, login Google Sign-In e verificação Play Integrity (+10 pts)
-- [ ] Touch targets ≥ 48×48dp, estados de loading/erro explícitos, `flutter analyze` e `flutter test` passando
+- [x] Projeto `apps/hub` com módulo nativo Kotlin (`TokenProvider` verificando `callingPackage`, `TrackedAppsScanner` usando `queryIntentActivities`, `HubNativePlugin`)
+- [x] Design System dark-first (`app_tokens.dart`, `app_theme.dart`) com contraste WCAG AA, tipografia tabular (`tabularFigures`) e suporte i18n `pt-BR` / `en`
+- [x] Modelos imutáveis e `HubController` conectado a repositório híbrido (Supabase + modo local/demo testável)
+- [x] Tela `/onboarding` com 3 slides explicativos, login Google Sign-In e verificação Play Integrity (+10 pts)
+- [x] Touch targets ≥ 48×48dp, estados de loading/erro explícitos, `flutter analyze` e `flutter test` passando
 
 ---
 
@@ -102,12 +102,12 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a tester, I want to discover campaigns, complete the 4-step enrollment flow, track my 14-day progress, submit feedback, and inspect my points wallet.
 
 **Acceptance Criteria:**
-- [ ] `/discover`: Carrossel **Featured (3 slots)** + abas **Recentes** e **Quase completos** + busca/filtro por categoria
-- [ ] `/c/:id`: Detalhes da campanha, certificado verificado, progresso `x/12`, regra 60s/dia × 14 dias e CTA "Quero testar"
-- [ ] `/c/:id/join`: Stepper guiado de 4 passos (Google Group → Opt-in Play → Instalar com detecção local → Abrir e validar handshake)
-- [ ] `/tests`: Cards com calendário de 14 dias (`✓`, `⚠`, `✗`), timer de sessão ≥ 60s e envio de feedback estruturado (+2 pts)
-- [ ] `/wallet`: Saldo Disponível × Pendente, barra rumo a 120 pts, aviso de expiração em 360 dias e extrato do ledger
-- [ ] Widget tests cobrindo descoberta, inscrição e carteira + `flutter analyze` limpo
+- [x] `/discover`: Carrossel **Featured (3 slots)** + abas **Recentes** e **Quase completos** + busca/filtro por categoria
+- [x] `/c/:id`: Detalhes da campanha, certificado verificado, progresso `x/12`, regra 60s/dia × 14 dias e CTA "Quero testar"
+- [x] `/c/:id/join`: Stepper guiado de 4 passos (Google Group → Opt-in Play → Instalar com detecção local → Abrir e validar handshake)
+- [x] `/tests`: Cards com calendário de 14 dias (`✓`, `⚠`, `✗`), timer de sessão ≥ 60s e envio de feedback estruturado (+2 pts)
+- [x] `/wallet`: Saldo Disponível × Pendente, barra rumo a 120 pts, aviso de expiração em 360 dias e extrato do ledger
+- [x] Widget tests cobrindo descoberta, inscrição e carteira + `flutter analyze` limpo
 
 ---
 
@@ -115,13 +115,13 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a developer publishing an app, I want to register my app, validate the SDK in 2 steps, publish a 12×14 campaign, book Featured slots, export the Play Console report, and manage account settings.
 
 **Acceptance Criteria:**
-- [ ] `/apps` e `/apps/new`: Listagem e cadastro de app (nome, `package_name`, descrição ≤ 80 chars, URL de opt-in)
-- [ ] `/apps/:id`: Exibição de `appKey`, cópia do prompt AI-ready, validação SDK em 2 etapas (Debug + Teste Fechado Play TOFU), publicação (debita 120 pts), cancelamento proporcional e painel da campanha
-- [ ] Modal **Relatório para Acesso à Produção** exportando Markdown estruturado com métricas verificadas e feedbacks reais
-- [ ] `/apps/:id/featured`: Reserva e compra de slot Featured (24h/72h/7d) nos 3 slots
-- [ ] `/settings`: Troca de idioma (`pt-BR`/`en`), lembrete diário às 19h, reputação, link para `reddit.com/r/AndroidAppTesters` (OQ-15) e exclusão de conta (H13)
-- [ ] Layout responsivo com `NavigationRail` para Console Web (`OQ-2`) em telas largas
-- [ ] Widget tests da jornada dev + `flutter analyze` e `flutter test` passando
+- [x] `/apps` e `/apps/new`: Listagem e cadastro de app (nome, `package_name`, descrição ≤ 80 chars, URL de opt-in)
+- [x] `/apps/:id`: Exibição de `appKey`, cópia do prompt AI-ready, validação SDK em 2 etapas (Debug + Teste Fechado Play TOFU), publicação (debita 120 pts), cancelamento proporcional e painel da campanha
+- [x] Modal **Relatório para Acesso à Produção** exportando Markdown estruturado com métricas verificadas e feedbacks reais
+- [x] `/apps/:id/featured`: Reserva e compra de slot Featured (24h/72h/7d) nos 3 slots
+- [x] `/settings`: Troca de idioma (`pt-BR`/`en`), lembrete diário às 19h, reputação, link para `reddit.com/r/AndroidAppTesters` (OQ-15) e exclusão de conta (H13)
+- [x] Layout responsivo com `NavigationRail` para Console Web (`OQ-2`) em telas largas
+- [x] Widget tests da jornada dev + `flutter analyze` e `flutter test` passando
 
 ---
 
@@ -129,12 +129,12 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a prospective developer searching Google or AI assistants, I want a fast static landing page with guides, SDK installation docs, `llms.txt`, and Play-required legal pages.
 
 **Acceptance Criteria:**
-- [ ] Projeto Astro estático em `apps/landing` com `canonical`, `hreflang` (`en`/`pt-BR`/`x-default`) e JSON-LD (`Organization`, `SoftwareApplication`, `FAQPage`, `Article`)
-- [ ] Home `/` (EN) e `/pt-br/` (PT-BR) com proposta de valor, fluxo, comparativo, Featured e link `r/AndroidAppTesters`
-- [ ] Guias AEO com bloco TL;DR (`/guides/12-testers-14-days-google-play`, `/guides/closed-testing-step-by-step`, `/guides/production-access-questionnaire`)
-- [ ] Docs do SDK (`/docs/sdk/android`, `/docs/sdk/flutter`) e arquivos `/llms.txt`, `/llms-full.txt`, `/robots.txt` (liberando crawlers de IA)
-- [ ] Páginas legais `/privacy`, `/terms`, `/delete-account`
-- [ ] `npm install && npm run build` sem erros gerando todas as rotas estáticas
+- [x] Projeto Astro estático em `apps/landing` com `canonical`, `hreflang` (`en`/`pt-BR`/`x-default`) e JSON-LD (`Organization`, `SoftwareApplication`, `FAQPage`, `Article`)
+- [x] Home `/` (EN) e `/pt-br/` (PT-BR) com proposta de valor, fluxo, comparativo, Featured e link `r/AndroidAppTesters`
+- [x] Guias AEO com bloco TL;DR (`/guides/12-testers-14-days-google-play`, `/guides/closed-testing-step-by-step`, `/guides/production-access-questionnaire`)
+- [x] Docs do SDK (`/docs/sdk/android`, `/docs/sdk/flutter`) e arquivos `/llms.txt`, `/llms-full.txt`, `/robots.txt` (liberando crawlers de IA)
+- [x] Páginas legais `/privacy`, `/terms`, `/delete-account`
+- [x] `npm install && npm run build` sem erros gerando todas as rotas estáticas
 
 ---
 
@@ -142,8 +142,8 @@ O **TesterLoop** (nome provisório, **❓ OQ-18**) resolve esse gargalo por meio
 **Description:** As a maintainer, I want an automated GitHub Actions workflow so that every PR and push validates Flutter, SDK, landing build, and backend artifacts.
 
 **Acceptance Criteria:**
-- [ ] `.github/workflows/ci.yml` executando `flutter test` em `packages/sdk-flutter`, `flutter analyze` + `flutter test` em `apps/hub`, `npm ci && npm run build` em `apps/landing` e checagem estrutural de `backend/supabase`
-- [ ] `README.md` na raiz atualizado com guia rápido de cada componente
+- [x] `.github/workflows/ci.yml` executando `flutter test` em `packages/sdk-flutter`, `flutter analyze` + `flutter test` em `apps/hub`, `npm ci && npm run build` em `apps/landing` e checagem estrutural de `backend/supabase`
+- [x] `README.md` na raiz atualizado com guia rápido de cada componente
 
 ---
 

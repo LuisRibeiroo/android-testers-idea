@@ -6,22 +6,22 @@
 
 | Documento | Escopo | Status |
 |---|---|---|
-| [`prd-testerloop-mvp.md`](./prd-testerloop-mvp.md) | MVP completo (Contratos, Backend Supabase VPS, SDK Kotlin, Plugin Flutter, Hub App, Landing Astro, CI) | Em execução |
+| [`done/prd-testerloop-mvp.md`](./done/prd-testerloop-mvp.md) | MVP completo (Contratos, Backend Supabase VPS, SDK Kotlin, Plugin Flutter, Hub App, Landing Astro, CI) | Concluído |
 
 ## Screen Registry (App Hub Flutter)
 
 | Rota | Tela | Feature | Status |
 |---|---|---|---|
-| `/onboarding` | Onboarding + Google Sign-In + Play Integrity | `auth` | Pendente |
-| `/discover` | Featured (3 slots) + Recentes + Quase completos | `discover` | Pendente |
-| `/c/:id` | Detalhe da campanha | `campaign_detail` | Pendente |
-| `/c/:id/join` | Stepper 4 passos de inscrição | `enrollment` | Pendente |
-| `/tests` | Meus testes (calendário 14 dias + feedback) | `enrollment` | Pendente |
-| `/wallet` | Carteira (disponível, pendente, expiração 360d, extrato) | `wallet` | Pendente |
-| `/apps` | Meus apps + modal `/apps/new` | `my_apps` | Pendente |
-| `/apps/:id` | Detalhe do app, validação SDK, publicar, relatório Play | `my_apps` | Pendente |
-| `/apps/:id/featured` | Reserva e compra de slot Featured | `featured` | Pendente |
-| `/settings` | Idioma, lembrete 19h, reputação, Reddit r/AndroidAppTesters, excluir conta | `settings` | Pendente |
+| `/onboarding` | Onboarding + Google Sign-In + Play Integrity | `auth` | Implementada |
+| `/discover` | Featured (3 slots) + Recentes + Quase completos | `discover` | Implementada |
+| `/c/:id` | Detalhe da campanha | `campaign_detail` | Implementada |
+| `/c/:id/join` | Stepper 4 passos de inscrição | `enrollment` | Implementada |
+| `/tests` | Meus testes (calendário 14 dias + feedback) | `enrollment` | Implementada |
+| `/wallet` | Carteira (disponível, pendente, expiração 360d, extrato) | `wallet` | Implementada |
+| `/apps` | Meus apps + modal `/apps/new` | `my_apps` | Implementada |
+| `/apps/:id` | Detalhe do app, validação SDK, publicar, relatório Play | `my_apps` | Implementada |
+| `/apps/:id/featured` | Reserva e compra de slot Featured | `featured` | Implementada |
+| `/settings` | Idioma, lembrete 19h, reputação, Reddit r/AndroidAppTesters, excluir conta | `settings` | Implementada |
 
 ## Open Questions
 
