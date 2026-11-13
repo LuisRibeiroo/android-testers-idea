@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://testerloop.io/schemas/tracking-token.schema.json",
+  "title": "TesterLoop Tracking Token JWT Claims",
+  "type": "object",
+  "required": ["iss", "aud", "sub", "pkg", "kind", "tz", "iat", "exp"],
+  "additionalProperties": false,
+  "properties": {
+    "iss": {
+      "const": "testerloop"
+    },
+    "aud": {
+      "const": "sdk"
+    },
+    "sub": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Enrollment ID"
+    },
+    "pkg": {
+      "type": "string",
+      "minLength": 3,
+      "description": "Android applicationId bound to this enrollment"
+    },
+    "kind": {
+      "type": "string",
+      "enum": ["tester", "owner_validation"]
+    },
+    "tz": {
+      "type": "string",
+      "description": "IANA timezone of the tester (e.g. America/Sao_Paulo)"
+    },
+    "iat": {
+      "type": "integer"
+    },
+    "exp": {
+      "type": "integer"
+    }
+  }
+}

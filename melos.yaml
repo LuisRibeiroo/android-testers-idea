@@ -1,0 +1,11 @@
+name: testerloop
+
+packages:
+  - packages/sdk-flutter
+  - apps/hub
+
+scripts:
+  analyze:
+    exec: flutter analyze
+  test:
+    exec: flutter test

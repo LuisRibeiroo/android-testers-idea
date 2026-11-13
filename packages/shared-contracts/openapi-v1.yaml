@@ -1,0 +1,331 @@
+openapi: 3.1.0
+info:
+  title: TesterLoop API
+  version: 1.0.0
+  description: API contracts for TesterLoop SDK, Hub app, and Google Play Billing verification (Supabase self-hosted on VPS).
+servers:
+  - url: https://api.testerloop.io/functions/v1
+    description: Self-hosted Supabase Edge Functions gateway (placeholder domain - OQ-18)
+
+paths:
+  /sdk-handshake:
+    post:
+      summary: Handshake between tested app SDK and backend
+      operationId: sdkHandshake
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HandshakeRequest'
+      responses:
+        '200':
+          description: Tracking status and remote config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HandshakeResponse'
+        '400':
+          description: Validation error
+        '403':
+          description: Invalid token, installer, or signing certificate
+
+  /sdk-events:
+    post:
+      summary: Batch ingestion of ping and foreground session events
+      operationId: sdkEvents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventsBatchRequest'
+      responses:
+        '200':
+          description: Accepted event IDs and kill-switch state
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsBatchResponse'
+
+  /sdk-config:
+    get:
+      summary: Remote kill-switch and flush interval config
+      operationId: sdkConfig
+      parameters:
+        - name: appKey
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Current SDK config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SdkConfigResponse'
+
+  /hub-device-register:
+    post:
+      summary: Register Android device with Play Integrity verification
+      operationId: hubDeviceRegister
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceRegisterRequest'
+      responses:
+        '200':
+          description: Registered device and optional welcome bonus status
+
+  /hub-tracking-token:
+    post:
+      summary: Issue ES256 opaque tracking JWT for an enrollment
+      operationId: hubTrackingToken
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [enrollment_id]
+              properties:
+                enrollment_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Signed tracking token
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [token, expires_at]
+                properties:
+                  token:
+                    type: string
+                  expires_at:
+                    type: string
+                    format: date-time
+
+  /hub-presence:
+    post:
+      summary: Daily installed SDK package presence report from Hub PresenceWorker
+      operationId: hubPresence
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [packages]
+              properties:
+                packages:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '200':
+          description: Presence recorded for today
+
+  /billing-verify:
+    get:
+      summary: Quote earliest available Featured slot window (1-3)
+      operationId: billingQuote
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: campaign
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: product
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [featured_24h, featured_72h, featured_7d]
+      responses:
+        '200':
+          description: Reserved booking window (TTL 15 min)
+    post:
+      summary: Verify Google Play purchaseToken and confirm Featured booking
+      operationId: billingVerify
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [booking_id, product_id, purchase_token]
+              properties:
+                booking_id:
+                  type: string
+                  format: uuid
+                product_id:
+                  type: string
+                purchase_token:
+                  type: string
+      responses:
+        '200':
+          description: Booking confirmed and purchase consumed
+
+  /billing-rtdn:
+    post:
+      summary: Google Play Real-Time Developer Notifications webhook (Pub/Sub push)
+      operationId: billingRtdn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Notification processed
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    HandshakeRequest:
+      type: object
+      required:
+        - appKey
+        - packageName
+        - versionCode
+        - signingCertSha256
+        - debuggable
+        - installId
+        - sdk
+      properties:
+        appKey:
+          type: string
+          pattern: '^tl_pk_[A-Za-z0-9_-]{8,64}$'
+        packageName:
+          type: string
+        versionCode:
+          type: integer
+        signingCertSha256:
+          type: string
+        installer:
+          type: string
+          nullable: true
+        debuggable:
+          type: boolean
+        installId:
+          type: string
+        sdk:
+          type: object
+          required: [platform, version]
+          properties:
+            platform:
+              type: string
+              enum: [android]
+            version:
+              type: string
+            wrapper:
+              type: string
+              nullable: true
+        device:
+          type: object
+          properties:
+            sdkInt:
+              type: integer
+        token:
+          type: string
+          nullable: true
+
+    HandshakeResponse:
+      type: object
+      required: [status, enabled]
+      properties:
+        status:
+          type: string
+          enum: [tracking, not_enrolled, disabled]
+        enabled:
+          type: boolean
+        flushIntervalSec:
+          type: integer
+
+    SdkEventItem:
+      type: object
+      required: [type, id]
+      properties:
+        type:
+          type: string
+          enum: [ping, session]
+        id:
+          type: string
+        clientTs:
+          type: integer
+        startTs:
+          type: integer
+        foregroundMs:
+          type: integer
+
+    EventsBatchRequest:
+      type: object
+      required: [appKey, packageName, installId, token, events]
+      properties:
+        appKey:
+          type: string
+        packageName:
+          type: string
+        installId:
+          type: string
+        token:
+          type: string
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/SdkEventItem'
+
+    EventsBatchResponse:
+      type: object
+      required: [accepted, enabled]
+      properties:
+        accepted:
+          type: array
+          items:
+            type: string
+        enabled:
+          type: boolean
+
+    SdkConfigResponse:
+      type: object
+      required: [enabled, flushIntervalSec]
+      properties:
+        enabled:
+          type: boolean
+        flushIntervalSec:
+          type: integer
+
+    DeviceRegisterRequest:
+      type: object
+      required: [android_id_hash]
+      properties:
+        android_id_hash:
+          type: string
+        model:
+          type: string
+        sdk_int:
+          type: integer
+        integrity_token:
+          type: string
