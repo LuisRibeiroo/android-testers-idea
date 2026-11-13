@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Android Kotlin SDK Docs — TesterLoop"
+  description="Integrate TesterLoop SDK into native Android apps in 2 deterministic steps with zero Kotlin code."
+  canonicalPath="/docs/sdk/android"
+>
+  <article class="card">
+    <h1>TesterLoop Android SDK (Kotlin / Java)</h1>
+    <p>Zero runtime code required. Auto-initializes via <code>androidx.startup</code>.</p>
+
+    <h2>1. Add dependency (<code>app/build.gradle.kts</code>)</h2>
+    <pre><code>dependencies &#123;
+    implementation("io.testerloop:sdk:1.0.0")
+&#125;</code></pre>
+
+    <h2>2. Add APP_KEY meta-data (<code>app/src/main/AndroidManifest.xml</code>)</h2>
+    <pre><code>&lt;meta-data
+    android:name="io.testerloop.APP_KEY"
+    android:value="tl_pk_your_app_key_here" /&gt;</code></pre>
+
+    <p>AI assistants can read <a href="/llms-full.txt">/llms-full.txt</a> directly.</p>
+  </article>
+</BaseLayout>

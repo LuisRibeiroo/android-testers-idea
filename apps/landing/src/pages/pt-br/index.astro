@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'TesterLoop Hub',
+  operatingSystem: 'Android',
+  applicationCategory: 'DeveloperApplication',
+};
+---
+
+<BaseLayout
+  title="TesterLoop — Consiga 12 testadores no Google Play por 14 dias"
+  description="Consiga 12 testadores reais para o teste fechado de 14 dias do Google Play com verificação via SDK, lembretes diários e relatório pronto para produção."
+  lang="pt-BR"
+  canonicalPath="/pt-br/"
+  jsonLd={jsonLd}
+>
+  <section class="card" style="margin-bottom: 24px;">
+    <h1>Consiga seus 12 testadores por 14 dias com prova de uso via SDK</h1>
+    <p>
+      Teste apps de outros desenvolvedores independentes para ganhar pontos (expiração apenas após 360 dias sem atividade)
+      e publique sua campanha com vagas de reserva e relatório exportável para o pedido de produção no Play Console.
+    </p>
+    <p>
+      <a class="btn" href="/docs/sdk/flutter">Ver guia do Plugin Flutter</a>
+      &nbsp;&nbsp;
+      <a href="/guides/12-testers-14-days-google-play">Entender regra 12×14 →</a>
+    </p>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <h2>Economia Recíproca</h2>
+      <p>1 ponto pendente por dia ativo + 3 bônus na conclusão + 2 por feedback. Com 120 pontos você publica sua campanha (12 + 3 reserva).</p>
+    </div>
+    <div class="card">
+      <h2>Sem PII no SDK</h2>
+      <p>O app testado nunca recebe e-mail ou advertising ID. A vinculação usa token opaco ES256 e ContentProvider isolado.</p>
+    </div>
+    <div class="card">
+      <h2>Comunidade de Apoio</h2>
+      <p>Conecte-se com outros devs Android no <a href="https://www.reddit.com/r/AndroidAppTesters" rel="noopener noreferrer">r/AndroidAppTesters</a>.</p>
+    </div>
+  </section>
+</BaseLayout>

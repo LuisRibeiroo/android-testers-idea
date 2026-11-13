@@ -1,0 +1,16 @@
+# TesterLoop
+
+> Reciprocal closed-testing marketplace for Google Play (12 testers × 14 continuous days) with SDK-verified install and foreground usage.
+
+## Documentation
+- [Android Kotlin SDK Guide](https://testerloop.io/docs/sdk/android): Zero-code integration (1 dependency + 1 manifest meta-data).
+- [Flutter Plugin Guide](https://testerloop.io/docs/sdk/flutter): Android-only Flutter wrapper (`flutter pub add testerloop`).
+- [Full LLM Install Guide](https://testerloop.io/llms-full.txt): Single-file deterministic instructions for AI coding assistants.
+
+## Guides
+- [12 Testers for 14 Days Google Play Requirement](https://testerloop.io/guides/12-testers-14-days-google-play)
+- [Closed Testing Step by Step](https://testerloop.io/guides/closed-testing-step-by-step)
+- [Production Access Questionnaire Guide](https://testerloop.io/guides/production-access-questionnaire)
+
+## Community
+- [r/AndroidAppTesters](https://www.reddit.com/r/AndroidAppTesters): Community support for Android closed testing.

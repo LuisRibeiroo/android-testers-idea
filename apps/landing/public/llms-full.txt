@@ -1,0 +1,37 @@
+# TesterLoop SDK: Installation Guide (AI-ready)
+
+You are integrating the **TesterLoop SDK** into an Android app (native Kotlin/Java **or** Flutter).
+The SDK verifies that closed-testing testers installed and used the app. It needs **no runtime code**.
+Follow **exactly one** path below: **Path A (native Android)** or **Path B (Flutter)**. Do not do both.
+
+**Inputs you need from the user:**
+- `APP_KEY`: looks like `tl_pk_` followed by 24 characters. If the user did not provide it, **ask for it**. Do not invent one.
+
+**Detect the project type:**
+- If `pubspec.yaml` exists at the project root -> **Path B (Flutter)**.
+- Else if `app/build.gradle.kts` or `app/build.gradle` exists -> **Path A (native Android)**.
+
+## Path A: Native Android (Kotlin/Java)
+1. Ensure `mavenCentral()` is in `settings.gradle.kts`.
+2. Add `implementation("io.testerloop:sdk:1.0.0")` to `app/build.gradle.kts`.
+3. Inside `<application>` in `app/src/main/AndroidManifest.xml`, add:
+```xml
+<meta-data
+    android:name="io.testerloop.APP_KEY"
+    android:value="APP_KEY" />
+```
+4. Done. Auto-init runs via `androidx.startup`.
+
+## Path B: Flutter
+1. Run `flutter pub add testerloop`.
+2. Inside `<application>` in `android/app/src/main/AndroidManifest.xml`, add:
+```xml
+<meta-data
+    android:name="io.testerloop.APP_KEY"
+    android:value="APP_KEY" />
+```
+3. Ensure `minSdk` in `android/app/build.gradle.kts` is 23 or higher.
+4. Done. Do not add any Dart code.
+
+## Google Play "Data safety" form
+Declare: App activity -> App interactions (collected, not shared, Analytics) and Device or other IDs (random install ID, collected, not shared, Analytics/Fraud prevention). Encrypted in transit. No PII, location, or advertising ID is collected.

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Google Play Closed Testing Step by Step"
+  description="Step-by-step checklist to configure a closed testing track, Google Group, and TesterLoop SDK."
+  canonicalPath="/guides/closed-testing-step-by-step"
+>
+  <article class="card">
+    <h1>Google Play Closed Testing Step by Step</h1>
+    <div class="tldr">
+      <strong>TL;DR:</strong> Create a closed testing track in Play Console, attach the platform Google Group as your tester list, integrate the zero-code TesterLoop SDK, validate your closed-track build via the Hub, and publish your 12-slot campaign.
+    </div>
+    <ol>
+      <li>Add the TesterLoop SDK dependency and <code>io.testerloop.APP_KEY</code> meta-data.</li>
+      <li>Upload your signed AAB to the Closed Testing track in Play Console.</li>
+      <li>Select <strong>Google Groups</strong> and add the TesterLoop testers group.</li>
+      <li>Verify Step 1 (Debug) and Step 2 (Play Closed Track) in TesterLoop Hub.</li>
+      <li>Publish your campaign and collect 14 days of verified usage and feedback.</li>
+    </ol>
+  </article>
+</BaseLayout>

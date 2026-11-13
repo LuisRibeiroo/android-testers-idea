@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'Google Play 12 Testers for 14 Days Requirement Explained',
+  datePublished: '2026-11-13',
+  dateModified: '2026-11-13',
+};
+---
+
+<BaseLayout
+  title="Google Play 12 Testers for 14 Days Requirement Explained"
+  description="Official breakdown of Google Play's 12 testers × 14 continuous days closed testing requirement for personal developer accounts."
+  canonicalPath="/guides/12-testers-14-days-google-play"
+  jsonLd={jsonLd}
+>
+  <article class="card">
+    <h1>Google Play 12 Testers for 14 Days Requirement Explained</h1>
+    <div class="tldr">
+      <strong>TL;DR:</strong> Personal Google Play developer accounts created after November 13, 2023 must run a closed test with at least <strong>12 testers opted in continuously for 14 days</strong> before applying for production access. Organization accounts with a D-U-N-S number are exempt.
+    </div>
+
+    <h2>How many testers do I need for Google Play closed testing?</h2>
+    <p>Google lowered the requirement from 20 to <strong>12 testers</strong>, while keeping the <strong>14 continuous days</strong> duration unchanged. If testers opt out mid-test and your active count drops below 12, your 14-day window stalls.</p>
+
+    <h2>Why do developers fail production access even after 14 days?</h2>
+    <ul>
+      <li>Testers installed the app once and never opened it again.</li>
+      <li>No meaningful feedback or bug fixes were recorded during the test.</li>
+      <li>The developer gave vague answers on the production access questionnaire.</li>
+    </ul>
+  </article>
+</BaseLayout>

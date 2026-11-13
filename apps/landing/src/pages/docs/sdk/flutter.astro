@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Flutter Plugin Docs — TesterLoop"
+  description="Integrate TesterLoop into Flutter apps with flutter pub add testerloop and one manifest tag."
+  canonicalPath="/docs/sdk/flutter"
+>
+  <article class="card">
+    <h1>TesterLoop Flutter Plugin</h1>
+    <p>Android-only wrapper; safe no-op on iOS, Web, and Desktop. No Dart code required.</p>
+
+    <h2>1. Install package</h2>
+    <pre><code>flutter pub add testerloop</code></pre>
+
+    <h2>2. Add APP_KEY (<code>android/app/src/main/AndroidManifest.xml</code>)</h2>
+    <pre><code>&lt;meta-data
+    android:name="io.testerloop.APP_KEY"
+    android:value="tl_pk_your_app_key_here" /&gt;</code></pre>
+
+    <p>Ensure <code>minSdk</code> is <strong>23 or higher</strong> in <code>android/app/build.gradle.kts</code>.</p>
+  </article>
+</BaseLayout>

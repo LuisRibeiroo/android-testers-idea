@@ -1,0 +1,99 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'TesterLoop',
+    url: 'https://testerloop.io',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: 'TesterLoop Hub',
+    operatingSystem: 'Android',
+    applicationCategory: 'DeveloperApplication',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'How many testers does Google Play closed testing require?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Personal Google Play developer accounts created after Nov 13, 2023 require at least 12 testers continuously opted in for 14 days.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Does the TesterLoop SDK collect personal user data?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'No. The SDK collects no email, location, or advertising ID. It verifies Play Store installation and foreground session duration using an opaque enrollment token.',
+        },
+      },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="TesterLoop — 12 Verified Android Testers for 14 Continuous Days"
+  description="Get 12 real testers for your Google Play 14-day closed test with SDK-verified usage, daily reminders, and exportable production access reports."
+  lang="en"
+  canonicalPath="/"
+  jsonLd={jsonLd}
+>
+  <section class="card" style="margin-bottom: 24px;">
+    <h1>Get 12 Google Play testers for 14 continuous days — verified by SDK</h1>
+    <p>
+      Test other indie developers' apps to earn points, then publish your closed-testing campaign
+      with real foreground usage proof and structured feedback for your Play Console production application.
+    </p>
+    <p>
+      <a class="btn" href="/docs/sdk/android">Integrate SDK in 2 minutes</a>
+      &nbsp;&nbsp;
+      <a href="/guides/12-testers-14-days-google-play">Read the 12×14 guide →</a>
+    </p>
+  </section>
+
+  <section class="grid" style="margin-bottom: 24px;">
+    <div class="card">
+      <h2>1. Earn Points Testing</h2>
+      <p>Pick apps in Discover, join via the platform Google Group, and open each app for ≥ 60s daily over 14 days.</p>
+    </div>
+    <div class="card">
+      <h2>2. Zero-Code SDK Proof</h2>
+      <p>One Gradle dependency + one manifest tag. Confirms Play Store installer, TOFU certificate, and foreground activity.</p>
+    </div>
+    <div class="card">
+      <h2>3. Export Production Report</h2>
+      <p>Download verified engagement metrics and real tester feedback ready for Google Play's production access form.</p>
+    </div>
+  </section>
+
+  <section class="card" style="margin-bottom: 24px;">
+    <h2>Informal Swap Groups vs TesterLoop</h2>
+    <table>
+      <thead>
+        <tr><th>Criteria</th><th>Telegram / Reddit Swaps</th><th>TesterLoop</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Daily install &amp; usage proof</td><td>Screenshots / honor system</td><td>Automatic SDK handshake &amp; foreground timer</td></tr>
+        <tr><td>Drop-off protection</td><td>Silent uninstalls reset your 14-day clock</td><td>12 + 3 buffer slots &amp; daily presence worker</td></tr>
+        <tr><td>Production access evidence</td><td>None</td><td>Structured Markdown report with real feedback</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Community &amp; Early Testers</h2>
+    <p>
+      Join Android developers coordinating closed tests in
+      <a href="https://www.reddit.com/r/AndroidAppTesters" rel="noopener noreferrer">r/AndroidAppTesters</a>.
+    </p>
+  </section>
+</BaseLayout>

@@ -1,0 +1,151 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  lang?: 'en' | 'pt-BR';
+  canonicalPath?: string;
+  altEnPath?: string;
+  altPtPath?: string;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+
+const {
+  title,
+  description,
+  lang = 'en',
+  canonicalPath = '/',
+  altEnPath = '/',
+  altPtPath = '/pt-br/',
+  jsonLd,
+} = Astro.props;
+
+const site = 'https://testerloop.io';
+const canonicalUrl = `${site}${canonicalPath}`;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" hreflang="en" href={`${site}${altEnPath}`} />
+    <link rel="alternate" hreflang="pt-BR" href={`${site}${altPtPath}`} />
+    <link rel="alternate" hreflang="x-default" href={`${site}${altEnPath}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    {jsonLd && (
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    )}
+    <style is:global>
+      :root {
+        --bg: #0b0f17;
+        --surface: #111827;
+        --surface-2: #1e293b;
+        --border: #263244;
+        --primary: #6366f1;
+        --success: #10b981;
+        --text: #f8fafc;
+        --muted: #94a3b8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+      }
+      a { color: #818cf8; text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      .wrap { max-width: 1020px; margin: 0 auto; padding: 24px 20px; }
+      header {
+        border-bottom: 1px solid var(--border);
+        background: rgba(17, 24, 39, 0.85);
+      }
+      nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav-links { display: flex; flex-wrap: wrap; gap: 16px; font-size: 14px; }
+      .brand { font-weight: 800; color: var(--text); font-size: 18px; }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+      }
+      .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+      .btn {
+        display: inline-block;
+        background: var(--primary);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+      .tldr {
+        background: var(--surface-2);
+        border-left: 4px solid var(--success);
+        padding: 16px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
+      pre {
+        background: #020617;
+        border: 1px solid var(--border);
+        padding: 16px;
+        border-radius: 8px;
+        overflow-x: auto;
+        font-size: 13px;
+      }
+      table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+      th, td { border: 1px solid var(--border); padding: 10px 12px; text-align: left; }
+      th { background: var(--surface-2); }
+      footer {
+        border-top: 1px solid var(--border);
+        margin-top: 48px;
+        padding: 24px 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <nav>
+          <a class="brand" href={lang === 'pt-BR' ? '/pt-br/' : '/'}>TesterLoop</a>
+          <div class="nav-links">
+            <a href="/guides/12-testers-14-days-google-play">Guides</a>
+            <a href="/docs/sdk/android">Android SDK</a>
+            <a href="/docs/sdk/flutter">Flutter Plugin</a>
+            <a href="https://www.reddit.com/r/AndroidAppTesters" rel="noopener noreferrer">r/AndroidAppTesters</a>
+            <a href={lang === 'pt-BR' ? '/' : '/pt-br/'}>{lang === 'pt-BR' ? 'EN' : 'PT-BR'}</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer>
+      <div class="wrap">
+        <p>
+          TesterLoop · Closed Testing Verification for Google Play ·
+          <a href="/privacy">Privacy</a> ·
+          <a href="/terms">Terms</a> ·
+          <a href="/delete-account">Delete Account</a> ·
+          <a href="/llms.txt">llms.txt</a>
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>

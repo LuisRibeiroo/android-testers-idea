@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy — TesterLoop"
+  description="Privacy policy and LGPD compliance for TesterLoop Hub and TesterLoop SDK."
+  canonicalPath="/privacy"
+>
+  <article class="card">
+    <h1>Privacy Policy</h1>
+    <p><strong>Hub App:</strong> stores Google account name, email, timezone, hashed device identifier, enrollment history, feedback, and Play Billing purchase references.</p>
+    <p><strong>SDK (Tested Apps):</strong> collects only a random <code>installId</code>, package name, version code, installer package, signing certificate SHA-256, foreground session durations, and an opaque ES256 tracking token. Never collects email, location, or advertising ID. Raw <code>sdk_events</code> are purged after 60 days.</p>
+  </article>
+</BaseLayout>
