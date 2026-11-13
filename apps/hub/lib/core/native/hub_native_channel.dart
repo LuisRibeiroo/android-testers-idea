@@ -17,7 +17,11 @@ class HubNativeChannel {
   static const MethodChannel _channel = MethodChannel('io.testerloop.hub/native');
   static const Duration _channelTimeout = Duration(milliseconds: 50);
 
-  bool get _isAndroid => !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+  final bool simulated;
+  const HubNativeChannel({this.simulated = false});
+
+  bool get _isAndroid =>
+      !simulated && !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
 
   Future<List<String>> listTrackedApps() async {
     if (!_isAndroid) return const [];
