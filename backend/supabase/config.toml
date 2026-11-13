@@ -1,0 +1,39 @@
+project_id = "testerloop"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "storage"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[auth]
+enabled = true
+site_url = "https://testerloop.io"
+additional_redirect_urls = ["testerloop://auth-callback"]
+jwt_expiry = 3600
+
+[auth.external.google]
+enabled = true
+client_id = "env(GOOGLE_CLIENT_ID)"
+secret = "env(GOOGLE_CLIENT_SECRET)"
+
+[functions.sdk-handshake]
+verify_jwt = false
+
+[functions.sdk-events]
+verify_jwt = false
+
+[functions.sdk-config]
+verify_jwt = false
+
+[functions.billing-rtdn]
+verify_jwt = false
